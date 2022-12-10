@@ -28,8 +28,9 @@ app.config.update(
 )
 
 db = MongoEngine(app)
-login_manager = LoginManager(app)
-login_manager.login_view = "login"
+#temp commented out
+#login_manager = LoginManager(app)
+#login_manager.login_view = "login"
 bcrypt = Bcrypt(app)
 
 # replace "default_value" with your api key if you need to hardcode it
