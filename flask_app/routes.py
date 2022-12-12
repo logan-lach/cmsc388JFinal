@@ -3,6 +3,7 @@ from flask import render_template, request, redirect, url_for, flash
 from flask_mongoengine import MongoEngine
 import io
 import base64
+"""*******Temp comment till login written"""
 # from flask_login import (
 #     LoginManager,
 #     current_user,
@@ -19,19 +20,29 @@ from datetime import datetime
 # local
 from . import app, bcrypt, client
 # from .forms import (
-# from .models import User, Review, load_user
-# from .utils import current_time
+from .models import Review
+from .utils import current_time
 
 """ ************ View functions ************ """
 
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-	return render_template("welcome_page.html")
+	reviews = Review.objects()
+	return render_template("welcome_page.html", reviews=reviews)
 
 @app.route('/test',methods=["GET", "POST"])
 def review():
 	form = ReviewForm()
 	if form.validate_on_submit():
-		return render_template("welcome_page.html")
-	return render_template("test.html", form=form)
+		feedback = Review(
+            #commenter=current_user._get_current_object(),
+            content=form.text.data,
+            date=current_time(),
+            classes=form.classes.data,
+			gpa=form.gpa.data)
+			
+		feedback.save()
+		
+	reviews = Review.objects()
+	return render_template("test.html", form=form, reviews=reviews)

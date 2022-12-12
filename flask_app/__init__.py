@@ -28,8 +28,8 @@ app.config.update(
 )
 
 db = MongoEngine(app)
-#temp commented out
-#login_manager = LoginManager(app)
+"""*******Temp comment till login written"""
+login_manager = LoginManager(app)
 #login_manager.login_view = "login"
 bcrypt = Bcrypt(app)
 

@@ -1,14 +1,22 @@
 {% extends "base.html" %}
 {% block header %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="{{ url_for('index') }}">Movie Reviewer</a>
+    <a class="navbar-brand">Class Reviewer</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-
-    <div class="collapse navbar-collapse" id="navbarCollapse">
+    {# Comment out as there are no login forms yet#}
+     <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="test">Review</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="test">About</a>
+            </li>
+        </ul>
+        {# <ul class="navbar-nav ml-auto">
             {% if current_user.is_authenticated %}
             <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('account') }}">
@@ -33,6 +41,7 @@
             </li>
             {% endif %}
         </ul>
+        #}
     </div>
 </nav>
 

@@ -21,8 +21,9 @@ class User(db.Document, UserMixin):
 
 
 class Review(db.Document):
-    commenter = db.ReferenceField(User, required=True)
-    content = db.StringField(required=True, min_length=5, max_length = 500)
+  # commenter = db.ReferenceField(User, required=True)
+    content = db.StringField(required=True, min_length=5, max_length=500)
     date = db.StringField(required=True)
-    imdb_id = db.StringField(min_length=9, max_length=9, required=True)
-    movie_title = db.StringField(min_length=1, max_length = 100, required=True)
+    classes = db.StringField(required=True, min_length=1, max_length=100)
+    gpa = db.StringField(required=True)
+

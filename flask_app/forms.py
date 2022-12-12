@@ -12,7 +12,7 @@ from wtforms.validators import (
     EqualTo,
     ValidationError,
 )
-GPA_CHOICES = [('1', 'A'), ('2', 'B'), ('3','C'),('4','D'), ('5','F'), ('6', 'W')]
+GPA_CHOICES = [('A', 'A'), ('B', 'B'), ('C','C'),('D','D'), ('F','F'), ('W', 'W')]
 # from .models import User
 
 class ReviewForm(FlaskForm):
