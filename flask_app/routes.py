@@ -103,3 +103,41 @@ def review():
 		
 	reviews = Review.objects()
 	return render_template("test.html", form=form, reviews=reviews)
+
+# let this reprsent the search page
+@app.route('/search', methods=['GET', 'POST'])
+def search_form():
+    form = SearchForm()
+    
+    if request.method == "POST":
+        if form.validate_on_submit():
+            return redirect(url_for('query', type = form.class_or_prof.data,
+                                    query=form.search_query.data))
+
+    return render_template('search.html', form=form)
+
+
+# this is the action once a search has been submited
+@app.route('/search/<query>', methods=['GET'])
+def query(type, query):
+    result = Review()
+    
+    #1. Search for class/professor with user input info on form
+    try:
+        if type == 'Course':
+            result.objects.get(class_name = query)
+        else:
+            result.objects.get(professor = query)
+    
+    
+    #2. If there is an error while searching reload serach page with error
+    except Exception as e:
+        return render_template('search.html', error_msg=e)
+
+    #3. If no results are found reload the search page for new search
+    if result == None:     
+        print('No Results for "{}" were not Found!'.format(query))
+        return redirect(url_for('/search'))   
+    
+    # 4. Load class page 'query_results.html' /**** Change redirction to reviews once review is done ***/
+    return redirect(url_for('/about')) 
