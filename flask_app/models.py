@@ -19,6 +19,8 @@ class User(db.Document, UserMixin):
     def get_id(self):
         return self.username
 
+# Review.objects(class_name = class_name)
+# Review.objects(professor = professor)
 
 class Review(db.Document):
   # commenter = db.ReferenceField(User, required=True)

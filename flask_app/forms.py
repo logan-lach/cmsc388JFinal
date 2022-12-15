@@ -13,7 +13,7 @@ from wtforms.validators import (
     ValidationError,
 )
 GPA_CHOICES = [('A', 'A'), ('B', 'B'), ('C','C'),('D','D'), ('F','F'), ('W', 'W')]
-# from .models import User
+from .models import User
 
 class ReviewForm(FlaskForm):
     classes = StringField(
@@ -24,3 +24,29 @@ class ReviewForm(FlaskForm):
     )
     gpa =  SelectField(u"GPA", choices=GPA_CHOICES,)
     submit = SubmitField("Submit")
+
+class RegistrationForm(FlaskForm):
+    username = StringField(
+        "Username", validators=[InputRequired(), Length(min=1, max=40)]
+    )
+    email = StringField("Email", validators=[InputRequired(), Email()])
+    password = PasswordField("Password", validators=[InputRequired()])
+    confirm_password = PasswordField(
+        "Confirm Password", validators=[InputRequired(), EqualTo("password")]
+    )
+    submit = SubmitField("Sign Up")
+
+    def validate_username(self, username):
+        user = User.objects(username=username.data).first()
+        if user is not None:
+            raise ValidationError("Username is taken")
+
+    def validate_email(self, email):
+        user = User.objects(email=email.data).first()
+        if user is not None:
+            raise ValidationError("Email is taken")
+
+class LoginForm(FlaskForm):
+    username = StringField('Username', validators=[InputRequired(), Length(min=1, max=40)])
+    password = PasswordField('Password', validators=[InputRequired(), Length(min=1)])
+    submit = SubmitField("Login")
