@@ -29,7 +29,7 @@ from .utils import current_time
 @app.route("/", methods=["GET", "POST"])
 def index():
 	reviews = Review.objects()
-	return render_template("welcome_page.html", reviews=reviews)
+	return render_template("welcome_page.html", reviews=reviews, current_user = current_user)
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -44,17 +44,21 @@ def register():
 				user = User(username=form.username.data, 
 							email=form.email.data, password=hashed)
 				user.save()
-				return redirect(url_for('test2'))
+				return redirect(url_for('login'))
 			else:
 				flash("Invalid registration. Please try again")
 	except ValueError as e:
 		return render_template("register.html", title="Register", error_message=e, form=form)
 	return render_template("register.html", title="Register", form = form)
 
+@app.route("/about", methods=["GET", "POST"])
+def about():
+	return render_template("about.html")
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
 	if current_user.is_authenticated:
-		return redirect(url_for('test'))
+		return redirect(url_for('index'))
 	
 	form = LoginForm()
 	try:
@@ -64,7 +68,7 @@ def login():
 
 				if user is not None and bcrypt.check_password_hash(user.password, form.password.data) :
 					login_user(user)
-					return redirect(url_for('test2'))
+					return redirect(url_for('index'))
 				else:
 					flash ("Incorrect username or password")
 	except ValueError as e:
@@ -73,7 +77,7 @@ def login():
 
 @app.route('/test2', methods=["GET", "POST"])
 def test2():
-	return "hello" + current_user.username 
+	return "hello" + current_user.username
 
 @app.route("/logout")
 @login_required
