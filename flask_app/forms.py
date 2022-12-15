@@ -13,6 +13,8 @@ from wtforms.validators import (
     ValidationError,
 )
 GPA_CHOICES = [('A', 'A'), ('B', 'B'), ('C','C'),('D','D'), ('F','F'), ('W', 'W')]
+CLASS_OR_PROF_CHOICE = ['Course', 'Professor']
+
 from .models import User
 
 class ReviewForm(FlaskForm):
@@ -50,3 +52,10 @@ class LoginForm(FlaskForm):
     username = StringField('Username', validators=[InputRequired(), Length(min=1, max=40)])
     password = PasswordField('Password', validators=[InputRequired(), Length(min=1)])
     submit = SubmitField("Login")
+
+class SearchForm(FlaskForm):
+    class_or_prof =  SelectField(u"Search For", choices=CLASS_OR_PROF_CHOICE,)
+    search_query = StringField(validators=[InputRequired(), Length(min=1, max=40)])
+    submit = SubmitField('Search')
+
+    
