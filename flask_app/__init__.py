@@ -19,7 +19,7 @@ from datetime import datetime
 from .client import MovieClient
 
 app = Flask(__name__)
-app.config["MONGODB_HOST"] = "mongodb://localhost:27017/p4"
+app.config["MONGODB_HOST"] = "mongodb://localhost:27017/p5"
 app.config["SECRET_KEY"] = b'k\x89,\x95C\xa9\xaa\x0e,t\xae%\xad\x95\x81Z'
 
 app.config.update(
