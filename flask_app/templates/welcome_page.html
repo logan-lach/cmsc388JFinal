@@ -5,21 +5,24 @@
     <h1 > Final Project CMSC388J</h1>
     <paragraph style="color: gray;">Review Count: {{reviews|length}}</paragraph>
 </div>
-<div style="float: left;">
-    {% for review in reviews %}
-    <h2> Course: {{ review.classes }} </h2>
-      <li class="media review-item">
-        <div class="media-body">
-          <span class="float-left">
-            <small>{{ review.date }}</small>
-            <small>{{review.gpa}}</small>
-          </span>
+<div style="float: left; height: 440px; overflow: auto; width: 100%;">
+  {% for review in reviews %}
+  <h2> Course: {{ review.class_name }} </h2>
+    <li class="media review-item">
+      <div class="media-body">
+        <span class="float-left">
+          <small style="white-space: pre;">{{ review.date }}</small>
+          <br>
+          <small style="white-space: pre;">GPA: {{review.gpa}} Star Rating: {{review.stars}}/5</small>
+          <br>
+          <small style="white-space: pre;">Professor: {{review.professor}}</small>
+          <br>
           <p class="image-float-left" style="float: left;  white-space: pre;">
-            {{ review.content }}
+            {{ review.text }}
           </p>
-        
-        </div>
-      </li>
-      {%endfor%}
-  </div>
+      </span>
+      </div>
+    </li>
+    {%endfor%}
+</div>
 {% endblock %}

@@ -22,8 +22,11 @@ class User(db.Document, UserMixin):
 
 class Review(db.Document):
   # commenter = db.ReferenceField(User, required=True)
-    content = db.StringField(required=True, min_length=5, max_length=500)
+    text = db.StringField(required=True, min_length=5, max_length=500)
     date = db.StringField(required=True)
-    classes = db.StringField(required=True, min_length=1, max_length=100)
+    class_name = db.StringField(required=True, min_length=1, max_length=40)
+    professor = db.StringField(required=True, min_length=1, max_length=40)
     gpa = db.StringField(required=True)
+    stars = db.StringField(required=True)
+    
 

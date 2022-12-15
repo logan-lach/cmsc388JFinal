@@ -37,9 +37,11 @@ def review():
 	if form.validate_on_submit():
 		feedback = Review(
             #commenter=current_user._get_current_object(),
-            content=form.text.data,
+            text=form.text.data,
             date=current_time(),
-            classes=form.classes.data,
+            class_name=form.class_name.data,
+			professor=form.professor.data,
+			stars=form.stars.data,
 			gpa=form.gpa.data)
 			
 		feedback.save()
