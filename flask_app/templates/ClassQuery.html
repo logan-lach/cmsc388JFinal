@@ -1,0 +1,51 @@
+{% extends "header.html"%}
+{% block content%} 
+<div class="mt-3 text-center">
+    <h1 style="font-weight: bold;">Reviews for {{course_name}}</h1>
+    <paragraph style="color: gray;">
+      Interested in taking this class? 
+      
+      {% if no_instructors == True %}
+        We're sorry, we cannot find any professors for this course
+      {% else %}
+      The professors teaching it are
+    
+      {% for instructors in instructors %}
+        <a href={{url_for("search_results", type ="Professor",
+            query=instructors)}}>{{instructors}}, </a>
+      {% endfor %}
+      {% endif %}
+
+    </paragraph>
+    <br>
+    <br>
+</div>
+
+<div style="float: left; height: 440px; overflow: auto; width: 100%; height: 100%;">
+  {% if no_reviews == True %}
+    No reviews yet. Be the first by clicking the link <a href={{url_for(write_review)}}>here</a>
+  {% else %}
+    {% for review in reviews %}
+        <li class="media review-item">
+        <div class="media-body">
+            <span class="float-left">
+            <small style="white-space: pre;">{{ review.date }}</small>
+            <br>
+            <small style="white-space: pre;">Written by: {{ review.commenter }}</small>
+            <br>
+            <small style="white-space: pre;">About: {{review.about}}</small>
+            <br>
+            <small style="white-space: pre;">Grade Earned: {{review.gpa}}</small>
+            <br>
+            <small style="white-space: pre;">Star Rating: {{review.stars}}/5</small>
+            <br>
+            <p class="image-float-left" style="float: left;  white-space: pre;">
+                {{ review.text }}
+            </p>
+        </span>
+        </div>
+        </li>
+        {%endfor%}
+    {% endif %}
+</div>
+{% endblock %}

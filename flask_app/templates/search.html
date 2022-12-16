@@ -2,7 +2,7 @@
 {% block content %}
 
 <div class="container">
-    <form action="/" class="form-inline my-2 my-lg-0" method="POST">
+    <form action="/search" class="form-inline my-2 my-lg-0" method="POST">
         {{ form.csrf_token }}
         {{ form.class_or_prof}}
         {{ form.search_query(class="form-control", placeholder="Search") }}

@@ -6,11 +6,11 @@ import io
 import base64
 """*******Temp comment till login written"""
 from flask_login import (
-     LoginManager,
-     current_user,
-     login_user,
-     logout_user,
-     login_required,
+	 LoginManager,
+	 current_user,
+	 login_user,
+	 logout_user,
+	 login_required,
 )
 from flask_bcrypt import Bcrypt
 from werkzeug.utils import secure_filename
@@ -23,10 +23,11 @@ from . import app, bcrypt
 # from .forms import (
 from .models import User, Review, load_user
 from datetime import datetime
+current_semester = 202301
 
 
 def current_time() -> str:
-    return datetime.now().strftime("%B %d, %Y at %H:%M:%S")
+	return datetime.now().strftime("%B %d, %Y at %H:%M:%S")
 
 
 """ ************ View functions ************ """
@@ -133,43 +134,78 @@ def test2():
 @app.route("/logout")
 @login_required
 def logout():
-    logout_user()
-    return redirect(url_for('index'))
+	logout_user()
+	return redirect(url_for('index'))
 
 # let this reprsent the search page
 @app.route('/search', methods=['GET', 'POST'])
 def search_form():
-    form = SearchForm()
-    
-    if request.method == "POST":
-        if form.validate_on_submit():
-            return redirect(url_for('query', type = form.class_or_prof.data,
-                                    query=form.search_query.data))
+	form = SearchForm()
+	
+	if request.method == "POST":
+		if form.validate_on_submit():
+			print("I am here")
+			return redirect(url_for('search_results', type = form.class_or_prof.data,
+									query=form.search_query.data))
 
-    return render_template('search.html', form=form)
+	return render_template('search.html', form=form)
 
 
 # this is the action once a search has been submited
-@app.route('/search/<type>/<query>', methods=['GET'])
+@app.route('/search/<type>/<query>', methods=["GET", "POST"])
 def search_results(type, query):
-    result = None
-    
-    #1. Search for class/professor with user input info on form
-    try:
-        if type == 'Course':
-            result = Review.objects.get(class_name = query)
-        else:
-            result = Review.objects.get(professor = query)
-    
-    
-    #2. If there is an error while searching reload serach page with error
-    except Exception as e:
-        return render_template('search.html', error_msg=e)
+	result = None
+	umd_data = None
+	#1. Search for class/professor with user input info on form
+	try:
+		if type == 'Course':
+			result = None
+			try:
+				result = Review.objects(type_review = "Course", about = query.replace("%20", " "))
+			except Exception as e:
+				result = []
+			umd_data = requests.get("https://api.umd.io/v1/courses/sections?course_id="+query.replace(" ", "%20"))
 
-    #3. If no results are found reload the search page for new search
-    if result == None:     
-        print('No Results for "{}" were not Found!'.format(query))
-        return redirect(url_for('/search'))   
-    
-    # 4. Load class page 'query_results.html' /**** Change redirction to reviews once review is done ***/
-    return redirect(url_for('/about')) 
+			A = []
+			if umd_data.status_code == 200:
+				v = umd_data.json()
+				for item in v:
+					A += item['instructors']
+				return render_template("ClassQuery.html", instructors = A, course_name = query, reviews = result)
+			else:
+				return render_template("ClassQuery.html", no_courses = True, reviews = result)
+
+		else:
+			result = None
+			print(query)
+			try: 
+				result = Review.objects(type_review = "Professor", about = query.strip())
+			except Exception as e:
+				result = []
+			umd_data = requests.get("https://api.umd.io/v1/professors?name="+query.replace(" ", "%20"))
+
+			print(result)
+			# NEED TO MAKE GRAPH SOMEWHERE HERE WITH ALL GPA RESULTS FROM RESULT 
+			
+			A = []
+			if umd_data.status_code == 200:
+				v = umd_data.json()[0]
+				for response in v['taught']:
+					if str(response['semester']) == str(current_semester):
+						A.append(response['course_id'])
+				return render_template("ProfQuery.html", professor = query, courses = A, reviews = result)
+			else:
+				return render_template("ProfQuery.html", no_courses=True, reviews = result)
+	
+	
+	#2. If there is an error while searching reload serach page with error
+	except Exception as e:
+		return render_template('search.html', error_msg=e)
+
+	#3. If no results are found reload the search page for new search
+	if result == None:     
+		print('No Results for "{}" were not Found!'.format(query))
+		return redirect(url_for('/search'))   
+	
+	# 4. Load class page 'query_results.html' /**** Change redirction to reviews once review is done ***/
+	return redirect(url_for('/about')) 
