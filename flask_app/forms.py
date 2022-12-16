@@ -14,17 +14,30 @@ from wtforms.validators import (
 )
 GPA_CHOICES = [('A', 'A'), ('B', 'B'), ('C','C'),('D','D'), ('F','F'), ('W', 'W')]
 CLASS_OR_PROF_CHOICE = ['Course', 'Professor']
+ONE_TO_FIVE_RATING_CHOICES = (
+    (1, '1'),
+    (2, '2'),
+    (3, '3'),
+    (4, '4'),
+    (5, '5'),
+)
 
 from .models import User
 
 class ReviewForm(FlaskForm):
-    classes = StringField(
-        "Course", validators=[InputRequired(), Length(min=1, max=40)]
-    )
-    text = TextAreaField(
+    type_review = SelectField(u"Type of Review", choices=CLASS_OR_PROF_CHOICE,)
+    about = StringField("About", validators=[InputRequired(), Length(min=1, max=40)])
+    specific = TextAreaField(
         "Comment", validators=[InputRequired(), Length(min=5, max=500)]
     )
-    gpa =  SelectField(u"GPA", choices=GPA_CHOICES,)
+    gpa = SelectField(u"GPA", choices=GPA_CHOICES,)
+    star_rating = SelectField(u"Star Rating", choices=ONE_TO_FIVE_RATING_CHOICES,)
+    submit = SubmitField("Submit")
+
+class AnonReviewForm(FlaskForm):
+    type_review = SelectField(u"Review About", choices=CLASS_OR_PROF_CHOICE,)
+    about = StringField("About", validators=[InputRequired(), Length(min=1, max=40)])
+    star_rating = SelectField(u"Star Rating", choices=ONE_TO_FIVE_RATING_CHOICES,)
     submit = SubmitField("Submit")
 
 class RegistrationForm(FlaskForm):

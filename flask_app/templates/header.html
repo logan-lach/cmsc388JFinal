@@ -10,7 +10,10 @@
      <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <a class="nav-link" href="test">Review</a>
+                <a class="nav-link" href="{{ url_for('search_form') }}">Search</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('write_review') }}">Review</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('about') }}">About</a>

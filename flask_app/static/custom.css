@@ -22,3 +22,7 @@ movie {
 .comment-pic {
     max-width: 64px;
 }
+
+#form-text{
+    width: 100% !important;
+}

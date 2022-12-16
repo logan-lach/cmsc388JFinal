@@ -1,0 +1,55 @@
+{% extends "header.html" %}
+{% block content %}
+<div class="row">
+    <div class="col">
+        <h2>Write a Review</h2>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+
+        {% if error_message %}
+            <div class="alert alert-warning" role="alert">
+                <span>{{ error_message }}</span>
+            </div>
+        {% endif %}
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <h3>{{ message }}</h3>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="/review">
+                {{form.csrf_token}}
+                <div class="form-group">
+                    <label for="formSelect">{{form.type_review.label}}</label>
+                    <br>
+                    {{ form.type_review(type="select", class="form-control", id="formSelect") }}
+                </div>
+                <div class="form-group">
+                    <label for="formAbout">{{form.about.label}}</label>
+                    {{ form.about(type="text", class="form-control", id="formAbout" )}}
+                </div>
+                <div class="form-group">
+                    {{ form.specific.label }}
+                    {{ form.specific(class="form-control") }}
+                </div><div class="form-group">
+                    <label for="formGPA">{{form.gpa.label}}</label>
+                    {{ form.gpa(class="form-control", id="formGPA") }}
+                </div>
+                <div class="form-group">
+                    <label for="formStar">{{form.star_rating.label}}</label>
+                    {{ form.star_rating(class="form-control", id="formStar") }}
+                </div>
+                {{ form.submit() }}
+            </form> 
+
+
+        {# Optionally show flashed messages if/when you need them,
+            if an authentication or other similar error occurs #}
+        {# Login form rendered here with Bootstrap classes #}
+    </div>
+</div>
+{% endblock %}

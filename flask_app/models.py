@@ -23,12 +23,13 @@ class User(db.Document, UserMixin):
 # Review.objects(professor = professor)
 
 class Review(db.Document):
-  # commenter = db.ReferenceField(User, required=True)
-    text = db.StringField(required=True, min_length=5, max_length=500)
-    date = db.StringField(required=True)
-    class_name = db.StringField(required=True, min_length=1, max_length=40)
-    professor = db.StringField(required=True, min_length=1, max_length=40)
-    gpa = db.StringField(required=True)
+    commenter = db.StringField() # Who wrote the review (Only for full reviews)
+    text = db.StringField(min_length=5, max_length=500) # Content of the review (Only for full reviews)
+    date = db.StringField() # Only required for reviews that have text (ie only full reviews)
+    full_review = db.StringField(required=True, min_length=4, max_length = 5) # Marks if its a full review or an anonymous review
+    type_review = db.StringField(required=True, min_length=5, max_length=9) # Marks "class" or "professor", helps with umd.io calls
+    about = db.StringField(required=True, min_length=1, max_length=40) # Who the review was written for (always required)
+    gpa = db.StringField() # GPA (Only thing an anonymous review can enter)
     stars = db.StringField(required=True)
     
 
