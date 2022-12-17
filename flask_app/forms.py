@@ -71,4 +71,11 @@ class SearchForm(FlaskForm):
     search_query = StringField(validators=[InputRequired(), Length(min=1, max=40)])
     submit = SubmitField('Search')
 
+class RemovalForm(FlaskForm):
+    username = StringField(validators=[InputRequired(), Length(min=1, max=40)])
+    about = StringField(validators=[InputRequired(), Length(min=1, max=40)])
+    specific = TextAreaField(
+        "Why you feel we should remove their comment", validators=[InputRequired(), Length(min=5, max=500)]
+    )
+    submit = SubmitField('Send Email')
     
