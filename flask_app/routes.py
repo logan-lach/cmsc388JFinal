@@ -4,6 +4,8 @@ from flask_mongoengine import MongoEngine
 import requests
 import io
 import base64
+import plotly.express as px
+import io
 """*******Temp comment till login written"""
 from flask_login import (
 	 LoginManager,
@@ -165,13 +167,19 @@ def search_results(type, query):
 			except Exception as e:
 				result = []
 			umd_data = requests.get("https://api.umd.io/v1/courses/sections?course_id="+query.replace(" ", "%20"))
-
+			counts = [0,0,0,0,0,0]
+			gpa = ['A','B','C','D','F','W']
+			for curr in result:
+				counts[gpa.index(curr.gpa)] += 1
+			fig = px.bar(x=gpa, y=counts, labels={'x':'GPA', 'y':'Count'})	
+			my_file= io.StringIO()
+			fig.write_html(my_file)
 			A = []
 			if umd_data.status_code == 200:
 				v = umd_data.json()
 				for item in v:
 					A += item['instructors']
-				return render_template("ClassQuery.html", instructors = A, course_name = query, reviews = result)
+				return render_template("ClassQuery.html", instructors = A, course_name = query, reviews = result, plot = my_file)
 			else:
 				return render_template("ClassQuery.html", no_courses = True, reviews = result)
 
@@ -183,9 +191,13 @@ def search_results(type, query):
 			except Exception as e:
 				result = []
 			umd_data = requests.get("https://api.umd.io/v1/professors?name="+query.replace(" ", "%20"))
-
-			print(result)
-			# NEED TO MAKE GRAPH SOMEWHERE HERE WITH ALL GPA RESULTS FROM RESULT 
+			counts = [0,0,0,0,0,0]
+			gpa = ['A','B','C','D','F','W']
+			for curr in result:
+				counts[gpa.index(curr.gpa)] += 1
+			fig = px.bar(x=gpa, y=counts, labels={'x':'GPA', 'y':'Count'})	
+			my_file= io.StringIO()
+			fig.write_html(my_file) 
 			
 			A = []
 			if umd_data.status_code == 200:
@@ -193,7 +205,7 @@ def search_results(type, query):
 				for response in v['taught']:
 					if str(response['semester']) == str(current_semester):
 						A.append(response['course_id'])
-				return render_template("ProfQuery.html", professor = query, courses = A, reviews = result)
+				return render_template("ProfQuery.html", professor = query, courses = A, reviews = result, plot = my_file)
 			else:
 				return render_template("ProfQuery.html", no_courses=True, reviews = result)
 	

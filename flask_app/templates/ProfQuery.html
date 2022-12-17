@@ -38,4 +38,7 @@
     </li>
     {%endfor%}
 </div>
+<div style="float: right;", class="container">
+  <iframe style="width: inherit; height: 1000;" srcdoc="{{ plot.getvalue()}}" frameborder="0"></iframe>
+</div>
 {% endblock %}

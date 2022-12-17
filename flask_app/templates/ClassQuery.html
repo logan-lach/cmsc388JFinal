@@ -21,7 +21,7 @@
     <br>
 </div>
 
-<div style="float: left; height: 440px; overflow: auto; width: 100%; height: 100%;">
+<div style="float: left; height: 400px; overflow: auto; width: 100%; height: 100%;">
   {% if no_reviews == True %}
     No reviews yet. Be the first by clicking the link <a href={{url_for(write_review)}}>here</a>
   {% else %}
@@ -47,5 +47,12 @@
         </li>
         {%endfor%}
     {% endif %}
+   
 </div>
+
+<div style="float: right;", class="container">
+          <iframe style="width: inherit; height: 1000;" srcdoc="{{ plot.getvalue()}}" frameborder="0"></iframe>
+</div>
+
+    
 {% endblock %}
