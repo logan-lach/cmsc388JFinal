@@ -3,7 +3,10 @@ from flask import render_template, request, redirect, url_for, flash
 from flask_mongoengine import MongoEngine
 import requests
 import io
+import os
 import base64
+import smtplib
+from flask_mail import Message
 import plotly.express as px
 import io
 """*******Temp comment till login written"""
@@ -16,12 +19,13 @@ from flask_login import (
 )
 from flask_bcrypt import Bcrypt
 from werkzeug.utils import secure_filename
-from .forms import ReviewForm, RegistrationForm, LoginForm, AnonReviewForm, SearchForm,  GPA_CHOICES
+from .forms import ReviewForm, RegistrationForm, LoginForm, AnonReviewForm, SearchForm, RemovalForm,  GPA_CHOICES
 # stdlib
 from datetime import datetime
 
 # local
-from . import app, bcrypt
+from . import app, bcrypt, mail
+
 # from .forms import (
 from .models import User, Review, load_user
 from datetime import datetime
@@ -40,6 +44,44 @@ def index():
 	big_query = Review.objects(full_review="True")
 	reviews = big_query.order_by("-date")[:3]
 	return render_template("welcome_page.html", reviews=reviews, size=len(big_query))
+
+@app.errorhandler(404)
+def custom_404(place):
+    return render_template('404.html', route=place), 404
+
+
+@app.route("/removeComment", methods=["GET", "POST"])
+def remove():
+	form = RemovalForm()
+	try:
+		if current_user.is_authenticated:
+			if request.method == "POST":
+				if form.validate_on_submit():
+					try: 
+						email_address = os.environ['EMAIL_USER'] + "@yahoo.com"     # add email address here
+						Subject = 'Comment Removal Request'
+						content = "Comment from " + form.username.data + " that was written about " + form.about.data + " was flagged because " + form.specific.data 
+						passcode = os.environ['EMAIL_PASSWORD']      # add passcode here
+						conn = smtplib.SMTP('smtp.mail.yahoo.com', 587) 
+						conn.starttls()
+						conn.login(email_address, passcode)
+						conn.sendmail(email_address,
+									"lwlach123@gmail.com",
+									Subject + content + footer)
+						conn.quit()
+					except Exception as e:
+						print("failed")
+						print(e)
+					return redirect(url_for("index"))
+				print("Did not validate")
+			return render_template("remove.html", form=form)
+	except Exception as e:
+		return render_template("remove.html", error_msg=str(e), form=form)
+
+
+
+
+
 
 @app.route("/review", methods=["GET", "POST"])
 def write_review():
