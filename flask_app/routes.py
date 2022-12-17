@@ -239,7 +239,7 @@ def search_results(type, query):
 				counts[gpa.index(curr.gpa)] += 1
 			fig = px.bar(x=gpa, y=counts, labels={'x':'GPA', 'y':'Count'})	
 			my_file= io.StringIO()
-			fig.write_html(my_file) 
+			fig.write_html(my_file)
 			
 			A = []
 			if umd_data.status_code == 200:
@@ -247,14 +247,15 @@ def search_results(type, query):
 				for response in v['taught']:
 					if str(response['semester']) == str(current_semester):
 						A.append(response['course_id'])
-				return render_template("ProfQuery.html", professor = query, courses = A, reviews = result, plot = my_file)
+				return render_template("ProfQuery.html", professor = query, courses = A, reviews = result, plot= my_file)
 			else:
 				return render_template("ProfQuery.html", no_courses=True, reviews = result)
 	
 	
 	#2. If there is an error while searching reload serach page with error
 	except Exception as e:
-		return render_template('search.html', error_msg=e)
+		print('No Results for "{}" were not Found!'.format(query))
+		return redirect(url_for('search_form'))
 
 	#3. If no results are found reload the search page for new search
 	if result == None:     
